@@ -1,23 +1,28 @@
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/internal/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators'
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
-//Declaring the api url that will provide data for the client app
-const apiUrl = 'YOUR_HOSTED_API_URL_HERE/';
+// delcaring the api url that will rpovide data for the client app
+const apiUrl = 'https://myflix-by-jop.herokuapp.com/';
+// Get token from local storage for requests
+const token = localStorage.getItem('token');
+// Get username from localStorage for URLs
+const username = localStorage.getItem('username');
+
 @Injectable({
   providedIn: 'root'
 })
-export class UserRegistrationService {
-  // Inject the HttpClient module to the constructor params
- // This will provide HttpClient to the entire class, making it available via this.http
-  constructor(private http: HttpClient) {
-  }
+
+export class FetchApiDataService {
+  constructor(private http: HttpClient, private router: Router) { }
+
   //User Registration
   public userRegistration(userDetails: any): Observable<any> {
     console.log(userDetails);
-    return this.http.post(apiUrl + 'users', userDetails).pipe(
+    return this.http.post(apiUrl + 'user', userDetails).pipe(
       catchError(this.handleError)
     );
   }
@@ -177,20 +182,22 @@ export class UserRegistrationService {
       catchError(this.handleError)
     );
   }
+
   // Extract data response 
   private extractResponseData(data: any | Object): any {
     return data || {};
   }
 
-private handleError(error: HttpErrorResponse): any {
+  // Handle error function
+  private handleError(error: HttpErrorResponse): any {
     if (error.error instanceof ErrorEvent) {
-    console.error('Some error occurred:', error.error.message);
+      console.error('some error occured:', error.error.message);
     } else {
-    console.error(
+      console.error(
         `Error Status code ${error.status}, ` +
-        `Error body is: ${error.error}`);
-    }
-    return throwError(
-    'Something bad happened; please try again later.');
+        `Error body is: ${error.error}`
+      );
+    } return throwError(
+      'Something went wrong; please try again later.');
   }
 }
