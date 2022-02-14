@@ -11,8 +11,8 @@ import { FetchApiDataService } from '../fetch-api-data.service';
   styleUrls: ['./profile-view.component.scss']
 })
 export class ProfileViewComponent implements OnInit {
-  user: any = {};
-  favs: any[] = [];
+  user: any = localStorage.getItem('username');
+  favs: any = null;
 
   constructor(
     public fetchApiData: FetchApiDataService,
@@ -25,19 +25,22 @@ export class ProfileViewComponent implements OnInit {
    * Gets user profile when the page is opened
    */
   ngOnInit(): void {
-    this.getUserProfile();
+    this.getCurrentUser()
   }
 
   /**
    * Gets user info from backend
    */
-  getUserProfile(): void {
-    let user = localStorage.getItem('username');
-    this.fetchApiData.getUserProfile().subscribe((res: any) => {
-      this.user = res;
-      this.getFavs();
+   getCurrentUser(): void {
+    this.fetchApiData.getUserProfile().subscribe((resp: any) => {
+      this.user = resp;
+      this.favs = resp.Favorites;
+      console.log(this.user)
+      return (this.user, this.favs);
     });
   }
+
+  
 
   /**
    * Opens dialog to edit user information
@@ -49,15 +52,18 @@ export class ProfileViewComponent implements OnInit {
   }
 
   // filter out the movies that aren't favs
-  getFavs(): void {
-    this.fetchApiData.getAllMovies().subscribe((res: any) => {
-      this.favs = res.filter((movie: any) => {
-        return this.user.FavoriteMovies.includes(movie._id)
-      });
-      console.log(this.favs);
-      return this.favs;
-    })
-  }
+    getFavs(): void {
+     let movies: any[] = [];
+     this.fetchApiData.getAllMovies().subscribe((res: any) => {
+       movies = res;
+       movies.forEach((movie: any) => {
+         if (this.user.favorites.includes(movie._id)) {
+           this.favs.push(movie);
+         }
+       });
+     });
+     return this.favs;
+   }
 
   /**
    * Allows user to remove movie from favs
@@ -79,14 +85,12 @@ export class ProfileViewComponent implements OnInit {
    */
   deleteProfile(): void {
     if (confirm('Are you sure? This cannot be undone.')) {
+      this.router.navigate(['welcome']).then(() => {
+        this.snackBar.open('Your account was deleted', 'OK', {duration: 6000});
+      });
+      this.router.navigate(['welcome'])
       this.fetchApiData.deleteUserProfile().subscribe(() => {
-        this.snackBar.open('Your account was deleted', 'OK', {
-          duration: 3000
-        });
         localStorage.clear();
-        this.router.navigate(['welcome']).then(() => {
-          window.location.reload();
-        });
       });
     }
   }

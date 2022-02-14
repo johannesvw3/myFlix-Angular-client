@@ -22,7 +22,7 @@ export class FetchApiDataService {
   //User Registration
   public userRegistration(userDetails: any): Observable<any> {
     console.log(userDetails);
-    return this.http.post(apiUrl + 'users', userDetails).pipe(
+    return this.http.post(apiUrl + 'user', userDetails).pipe(
       catchError(this.handleError)
     );
   }
@@ -157,7 +157,7 @@ export class FetchApiDataService {
   editUserProfile(userData: object): Observable<any> {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
-    return this.http.put(apiUrl + `user/${username}`, userData, {
+    return this.http.put(apiUrl + `user/update/${username}`, userData, {
       headers: new HttpHeaders(
         {
           Authorization: 'Bearer ' + token,
@@ -172,7 +172,7 @@ export class FetchApiDataService {
   public deleteUserProfile(): Observable<any> {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
-    return this.http.delete(apiUrl + `user/${username}`, {
+    return this.http.delete(apiUrl + `user/delete/${username}`, {
       headers: new HttpHeaders(
         {
           Authorization: 'Bearer ' + token,

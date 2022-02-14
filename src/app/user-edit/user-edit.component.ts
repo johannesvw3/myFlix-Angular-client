@@ -15,7 +15,7 @@ export class UserEditComponent implements OnInit {
   /**
    * Required fields tp update user info
    */
-  @Input() userData = { Username: '', Password: '', Email: '', Birthday: '' };
+  @Input() userData = { Username: '', Password: '', Name: '', Email: '', Birthday: '' };
 
   constructor(
     public fetchApiData: FetchApiDataService,
@@ -33,6 +33,7 @@ export class UserEditComponent implements OnInit {
   editUserProfile(): void {
     this.fetchApiData.editUserProfile(this.userData).subscribe((res) => {
       this.dialogRef.close();
+      window.location.reload();
       localStorage.setItem('username', res.Username)
       console.log(res)
       this.snackBar.open(this.userData.Username, 'Successfully updated user details!', {
@@ -42,9 +43,6 @@ export class UserEditComponent implements OnInit {
       this.snackBar.open(res, 'OK', {
         duration: 3000
       });
-      setTimeout(function () {
-        window.location.reload();
-      }, 3500);
     })
   }
 
