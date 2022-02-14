@@ -4,6 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import { FetchApiDataService } from '../fetch-api-data.service';
+import { DescriptionCardComponent } from '../description-card/description-card.component';
+import { GenreCardComponent } from '../genre-card/genre-card.component';
+import { DirectorCardComponent } from '../director-card/director-card.component';
+
 
 @Component({
   selector: 'app-profile-view',
@@ -25,7 +29,7 @@ export class ProfileViewComponent implements OnInit {
    * Gets user profile when the page is opened
    */
   ngOnInit(): void {
-    this.getCurrentUser()
+    this.getCurrentUser();
   }
 
   /**
@@ -40,6 +44,35 @@ export class ProfileViewComponent implements OnInit {
     });
   }
 
+  openSynopsis(title: string, imagePath: any, description: string): void {
+    this.dialog.open(DescriptionCardComponent, {
+      data: {
+        Title: title,
+        ImagePath: imagePath,
+        Description: description,
+      },
+      width: '500px'
+    });
+  }
+  openGenre(name: string, description: string): void {
+    this.dialog.open(GenreCardComponent, {
+      data: {
+        Name: name,
+        Description: description,
+      },
+      width: '500px'
+    });
+  }
+  openDirector(name: string, bio: string, birth: string): void {
+    this.dialog.open(DirectorCardComponent, {
+      data: {
+        Name: name,
+        Bio: bio,
+        Birth: birth,
+      },
+      width: '500px'
+    });
+  }
   
 
   /**

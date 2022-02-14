@@ -1,0 +1,39 @@
+.home-page {
+    display: flex; 
+    flex-wrap: wrap;
+    padding: 26px;
+    justify-content: center;
+  }
+  
+  mat-card {
+    flex: auto;
+    margin: 7px;
+    text-align: center;
+    font-family: 'Work Sans', sans-serif;
+    width: 250px;
+  }
+  
+  mat-card-header {
+    max-height: 60px;
+  }
+  
+  mat-card-title {
+    font-family: 'Acme', sans-serif;
+    color: steelblue
+  }
+  
+  img {
+    width: 150;
+    height: 470px;
+  }
+  
+  @media screen and (max-width: 840px) {
+    mat-card {
+        max-width: 350px;
+    }
+  
+    img {
+        width: 250px;
+        height: 370px;
+    }
+  }
